@@ -1,0 +1,87 @@
+PRD
+
+      "title": "Local Offline OCR-to-Excel Web Application",
+      "version": "1.0",
+      "status": "Draft",
+      "product_name": "LocalExtract",
+      "description": "A standalone, browser-based application hosted locally on a computer hard drive. The application accepts image files containing text, performs Optical Character Recognition (OCR) locally without internet access, parses the extracted data, and exports it into a structured Excel (.xlsx) file.",
+      "target_audience": "Data entry clerks, auditors, or researchers working in air-gapped or low-connectivity environments.",
+      "core_value_proposition": "Automated data extraction from images with zero data leakage risk (offline) and no API costs."
+
+    "technical_architecture": {
+      "stack_type": "Local Web Server",
+      "backend": "Python 3.x (Flask Framework)",
+      "frontend": "HTML5, CSS3, Vanilla JavaScript",
+      "ocr_engine": "Tesseract-OCR (Must be installed locally alongside Python)",
+      "database": "None (In-memory processing / Temporary file storage)",
+      "operating_environment": "Local Hard Drive (Windows/Linux/macOS)"
+
+    "key_features": [
+
+        "name": "Offline Drag-and-Drop Interface",
+        "description": "A frontend drop zone that accepts .png, .jpg, and .jpeg files. It must validate file types client-side."
+
+        "name": "Local OCR Processing",
+        "description": "Backend integration with Pytesseract to extract raw string data from images without sending data to the cloud."
+
+        "name": "Data Parsing & Structuring Engine",
+        "description": "A rule-based parser (Regex/String manipulation) to map raw extracted text into defined columns (e.g., 'Date', 'Reference ID', 'Amount', 'Description')."
+
+        "name": "Excel Generation",
+        "description": "Conversion of structured dictionaries into an .xlsx file using Pandas/Openpyxl."
+
+    "user_stories": [
+        "actor": "User",
+        "action": "drag and drop an invoice image into the browser window",
+        "outcome": "see a visual confirmation that the file is uploaded and processing."
+
+
+        "actor": "User",
+        "action": "wait for the process to finish",
+        "outcome": "have the text extracted and sorted into columns without needing an internet connection."
+
+        "actor": "User",
+        "action": "click a download button",
+        "outcome": "receive an Excel file populated with the data from the image."
+
+    "ui_ux_requirements": {
+      "theme": "Dark Mode Only (Background: #121212, Text: #E0E0E0, Accents: #BB86FC)",
+      "layout": "Single Page Application (SPA) feel.",
+      "components": [
+        "Header with App Title",
+        "Large dashed-border Drop Zone (centerscreen)",
+        "Processing Spinner/Progress Bar",
+        "Download Button (appears only after processing)"
+      ]
+    },
+    "technical_requirements": {
+      "python_dependencies": [
+        "flask",
+        "pytesseract",
+        "pandas",
+        "openpyxl",
+        "pillow",
+        "werkzeug"
+      
+      "external_dependencies": [
+        "Tesseract-OCR Binary (Must be pre-installed or bundled in the hard drive folder)"
+      
+      "installation_strategy": "The application folder must contain a 'start.bat' or 'run.sh' script that activates a local virtual environment and launches the Flask server on localhost (e.g., http://127.0.0.1:5000)."
+    
+    "data_parsing_logic": {
+      "note": "Since OCR returns unstructured text, specific logic must be hardcoded based on the expected image type. Example logic for an Invoice:",
+      "columns_mapping": [
+    
+          "column_name": "Date",
+          "extraction_rule": "Regex search for patterns DD/MM/YYYY or MM-DD-YYYY"
+        
+          "column_name": "Total Amount",
+          "extraction_rule": "Regex search for currency symbols ($/€) followed by digits"
+
+          "column_name": "Raw Text",
+          "extraction_rule": "Full dump of OCR text for manual verification"
+      
+    "constraints": {
+      "network": "Strictly Air-gapped. No CDN links for CSS/JS libraries (Bootstrap/jQuery must be downloaded and served locally).",
+      "performance": "OCR processing time dependent on local CPU power.",
+      "file_storage": "Input images are deleted immediately after processing to save hard drive space."
